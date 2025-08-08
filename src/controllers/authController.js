@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
-const SECRET = process.env.JWT_SECRET || 'rahasia'; // pastikan nanti di .env
+const { jwtSecret, jwtExpiresIn } = require('../config');
 
 const register = async (req, res) => {
   const { username, password } = req.body;
@@ -33,8 +32,8 @@ const login = async (req, res) => {
 
     const token = jwt.sign(
       { userId: user.id, username: user.username },
-      SECRET,
-      { expiresIn: '1d' }
+      jwtSecret,
+      { expiresIn: jwtExpiresIn }
     );
 
     res.json({ token });

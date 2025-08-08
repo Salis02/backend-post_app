@@ -3,7 +3,13 @@ const prisma = require('../lib/prisma');
 const getAllPosts = async (req, res) => {
   try {
     const posts = await prisma.post.findMany({
-      include: { user: true },
+      include: { 
+        user: {
+          select:{
+            username: true,
+          }
+        }
+      },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -24,7 +30,11 @@ const createPost = async (req, res) => {
   const { title, content, userId } = req.body;
   try {
     const newPost = await prisma.post.create({
-      data: { title, content, userId: parseInt(userId) },
+      data: { 
+        title, 
+        content, 
+        userId: req.user.userId 
+      },
     });
 
     res.status(201).json({
